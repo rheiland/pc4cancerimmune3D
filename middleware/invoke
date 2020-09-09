@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool pc4cancerimmune3D.ipynb" -t pc4tumor3D -u anaconda3-5.1
+/usr/bin/invoke_app "$@" -C "start_jupyter -A -T @tool pc4cancerimmune3D.ipynb" -t pc4tumor3d -u anaconda3-5.1
