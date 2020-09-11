@@ -17,6 +17,7 @@ except:
     pass
 # from svg import SVGTab
 from substrates import SubstrateTab
+from fury_tab import FuryTab
 from animate_tab import AnimateTab
 from pathlib import Path
 import platform
@@ -56,6 +57,7 @@ if xml_root.find('.//cell_definitions'):
 
 # svg = SVGTab()
 sub = SubstrateTab()
+fury_tab = FuryTab()
 animate_tab = AnimateTab()
 
 nanoHUB_flag = False
@@ -401,13 +403,13 @@ tab_height = 'auto'
 tab_layout = widgets.Layout(width='auto',height=tab_height, overflow_y='scroll',)   # border='2px solid black',
 
 if xml_root.find('.//cell_definitions'):
-    titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Cell Types', 'Out: Plots', 'Animate']
-    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, cell_types_tab.tab, sub.tab, animate_tab.tab],
+    titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Cell Types', 'Out: Plots', 'Fury','Animate']
+    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, cell_types_tab.tab, sub.tab, fury_tab.tab, animate_tab.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 else:
-    titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Out: Plots', 'Animate']
-    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, sub.tab, animate_tab.tab],
+    titles = ['About', 'Config Basics', 'Microenvironment', 'User Params', 'Out: Plots', 'Fury','Animate']
+    tabs = widgets.Tab(children=[about_tab.tab, config_tab.tab, microenv_tab.tab, user_tab.tab, sub.tab, fury_tab.tab, animate_tab.tab],
                    _titles={i: t for i, t in enumerate(titles)},
                    layout=tab_layout)
 
