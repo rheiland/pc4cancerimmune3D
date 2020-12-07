@@ -10,6 +10,19 @@ class FuryTab(object):
         #self.tab.append_display_data(HTML(filename='doc/fury_client.html'))
         #self.tab.append_display_data(Javascript(
         #    filename='doc/FuryWebClient.js'))
+        html = \
+            """
+            <iframe 
+                src='http://fury.grg.sice.indiana.edu/tumor/' 
+                height='500' width='100%'>
+            </iframe>
+            """
+        self.tab.append_display_data(HTML(html))
+        html = \
+            """
+            <iframe src='doc/fury_client.html' height='500' width='100%'>
+            </iframe>
+            """
         js = \
             """
             element.css({backgroundColor: "gray", margin: "0px", 
@@ -18,7 +31,10 @@ class FuryTab(object):
             element.width(100);
             element.html( $( "<div id='fury'></div>" ) );
             
-            const divRenderer = document.getElementById('fury');
+            const newScriptTag = document.createElement('script');
+            newScriptTag.type = 'text/javascript';
+            newScriptTag.src = 'doc/FuryWebClient.js';
+            document.body.appendChild(newScriptTag);
             """
-        self.tab.append_display_data(Javascript(js))
+        #self.tab.append_display_data(Javascript(js))
         #self.tab.append_display_data(Javascript(filename='doc/FuryWebClient.js'))
