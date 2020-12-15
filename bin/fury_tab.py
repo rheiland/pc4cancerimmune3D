@@ -13,16 +13,16 @@ class FuryTab(object):
         html = \
             """
             <iframe 
-                src='http://fury.grg.sice.indiana.edu/tumor/' 
+                src='http://fury.grg.sice.indiana.edu/tumor/'
                 height='500' width='100%'>
             </iframe>
             """
-        self.tab.append_display_data(HTML(html))
         html = \
             """
             <iframe src='doc/fury_client.html' height='500' width='100%'>
             </iframe>
             """
+        self.tab.append_display_data(HTML(html))
         js = \
             """
             element.css({backgroundColor: "gray", margin: "0px", 
