@@ -2,6 +2,7 @@
 
 import os, math
 from pathlib import Path
+from shutil import copyfile
 from ipywidgets import Layout, Label, Text, Checkbox, Button, BoundedIntText, HBox, VBox, Box, \
     FloatText, Dropdown, interactive
 import matplotlib.pyplot as plt
@@ -379,6 +380,48 @@ class SubstrateTab(object):
         row2 = HBox( [row2a, Label('.....'), row2b])
 
         if (hublib_flag):
+            self.fury_button= Button(
+                description="Send current frame's 3D data to Fury", #style={'description_width': 'initial'},
+                button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
+               tooltip='Click to send data to the Fury GPU server',
+                disabled=False,
+               layout=Layout(width='280px')
+            )
+            self.fury_feedback_str = Label(value='')
+
+            def send_to_fury_cb(b):
+                self.fury_feedback_str.value = "working..."
+                session_dir = os.getenv('SESSIONDIR')
+                print('session_dir = ',session_dir)
+                session_id = os.getenv('SESSION')
+                print('session_id = ',session_id)
+                user_id = os.getenv('USER')
+                print('user_id = ',user_id)
+                fury_data_path_str = "/data/tools/shared/" + user_id + "/fury/" + session_id
+
+                # dummy to test locally
+                # fury_data_path_str = "/tmp/" + user_id + "/fury" 
+                print("fury_data_path_str = ",fury_data_path_str)
+
+                os.makedirs(fury_data_path_str, exist_ok=True)
+                # data_file = "output00000001_cells_physicell.mat"
+                data_file = "output%08d_cells_physicell.mat" % self.svg_frame
+                # from the app's root directory
+                from_file = "tmpdir/" + data_file
+                print("from: ",from_file)
+                to_file = fury_data_path_str + "/" + data_file
+                print("to: ",to_file)
+                copyfile(from_file, to_file)
+                # copyfile("tmpdir/" + data_file, fury_data_path_str + "/" + "output00000001_cells_physicell.mat")
+
+                self.fury_feedback_str.value = ""
+
+            self.fury_button.on_click(send_to_fury_cb)
+            fury_row = HBox([self.fury_button, self.fury_feedback_str])
+
+#            self.fury_button = Button(description='random_seed', disabled=True, layout=name_button_layout)
+#        param_name1.style.button_color = 'lightgreen'
+
             self.download_button = Download('mcds.zip', style='warning', icon='cloud-download', 
                                                 tooltip='Download data', cb=self.download_cb)
 
@@ -388,7 +431,7 @@ class SubstrateTab(object):
 
             # box_layout = Layout(border='0px solid')
             controls_box = VBox([row1, row2])  # ,width='50%', layout=box_layout)
-            self.tab = VBox([controls_box, self.i_plot, download_row])
+            self.tab = VBox([controls_box, self.i_plot, fury_row, download_row])
             # self.tab = VBox([controls_box, self.debug_str, self.i_plot, download_row])
         else:
             # self.tab = VBox([row1, row2])
