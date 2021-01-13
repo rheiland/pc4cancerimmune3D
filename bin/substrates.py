@@ -407,7 +407,9 @@ class SubstrateTab(object):
                 # data_file = "output00000001_cells_physicell.mat"
                 data_file = "output%08d_cells_physicell.mat" % self.svg_frame
                 # from the app's root directory
-                from_file = "tmpdir/" + data_file
+                # print("self.output_dir = ",self.output_dir)
+                # from_file = "tmpdir/" + data_file
+                from_file = self.output_dir + "/" + data_file
                 print("from: ",from_file)
                 to_file = fury_data_path_str + "/" + data_file
                 print("to: ",to_file)
