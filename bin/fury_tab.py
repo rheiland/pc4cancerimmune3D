@@ -5,7 +5,7 @@ from IPython.display import HTML, Javascript, display
 class FuryTab(object):
 
     def __init__(self):
-        self.tab = Output(layout={'height': '600px'})
+        self.tab = Output(layout={'height': '650px'})
         #self.tab = Output(layout={'height': 'auto'})
         #self.tab.append_display_data(HTML(filename='doc/fury_client.html'))
         #self.tab.append_display_data(Javascript(
@@ -14,12 +14,21 @@ class FuryTab(object):
             """
             <iframe 
                 src='http://fury.grg.sice.indiana.edu/tumor/'
-                height='500' width='100%'>
+                height='650' width='50%'>
             </iframe>
             """
         html = \
             """
-            <iframe src='doc/fury_client.html' height='500' width='100%'>
+            <iframe src='doc/fury_client.html' height='650' width='50%'>
+            </iframe>
+            """
+        html = \
+            """
+            <iframe src='doc/fury_client.html' height='650' width='50%' 
+                align="left">
+            </iframe>
+            <iframe src='http://fury-server.hubzero.org/tumor/' 
+                height='650' width='50%' align="right">
             </iframe>
             """
         self.tab.append_display_data(HTML(html))
