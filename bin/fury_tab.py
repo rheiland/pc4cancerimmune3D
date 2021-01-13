@@ -27,7 +27,7 @@ class FuryTab(object):
             <iframe src='doc/fury_client.html' height='650' width='50%' 
                 align="left">
             </iframe>
-            <iframe src='http://fury-server.hubzero.org/tumor/' 
+            <iframe src='https://fury-server.hubzero.org/tumor/' 
                 height='650' width='50%' align="right">
             </iframe>
             """
