@@ -56,8 +56,8 @@ if xml_root.find('.//cell_definitions'):
     cell_types_tab = CellTypesTab()
 
 # svg = SVGTab()
-sub = SubstrateTab()
 fury_tab = FuryTab()
+sub = SubstrateTab(fury_tab)
 #animate_tab = AnimateTab()
 
 nanoHUB_flag = False

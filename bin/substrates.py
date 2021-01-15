@@ -37,8 +37,10 @@ warnings.filterwarnings("ignore")
 
 class SubstrateTab(object):
 
-    def __init__(self):
+    def __init__(self, fury_tab):
         
+        self.fury_tab = fury_tab
+
         self.output_dir = '.'
         # self.output_dir = 'tmpdir'
 
@@ -405,16 +407,38 @@ class SubstrateTab(object):
 
                 os.makedirs(fury_data_path_str, exist_ok=True)
                 # data_file = "output00000001_cells_physicell.mat"
+
+                # we need to copy 3(?) files (for any one frame)
+                mesh_file = "initial_mesh0.mat" 
+                xml_file = "output%08d.xml" % self.svg_frame
                 data_file = "output%08d_cells_physicell.mat" % self.svg_frame
                 # from the app's root directory
                 # print("self.output_dir = ",self.output_dir)
                 # from_file = "tmpdir/" + data_file
+
+                from_file = self.output_dir + "/" + mesh_file
+                to_file = fury_data_path_str + "/" + mesh_file
+                copyfile(from_file, to_file)
+
+                from_file = self.output_dir + "/" + xml_file
+                to_file = fury_data_path_str + "/" + xml_file
+                copyfile(from_file, to_file)
+
                 from_file = self.output_dir + "/" + data_file
                 print("from: ",from_file)
                 to_file = fury_data_path_str + "/" + data_file
                 print("to: ",to_file)
                 copyfile(from_file, to_file)
+
+#                time.sleep(3)
+                file = Path(to_file)
+                while not file.exists():
+                    time.sleep(2)
+
                 # copyfile("tmpdir/" + data_file, fury_data_path_str + "/" + "output00000001_cells_physicell.mat")
+
+                # Send signal to Fury that new data is ready: (folder, filename)
+                self.fury_tab.send_data(fury_data_path_str, xml_file)
 
                 self.fury_feedback_str.value = ""
 
