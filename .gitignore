@@ -1,2 +1,7 @@
 .idea/
 bin/__pycache__/
+*.o
+tmpdir/
+myproj
+node_modules/
+.ipynb_checkpoints/
