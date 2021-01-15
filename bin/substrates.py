@@ -391,6 +391,13 @@ class SubstrateTab(object):
             )
             self.fury_feedback_str = Label(value='')
 
+            self.fury_reset_button= Button(
+                description="Reset Fury", #style={'description_width': 'initial'},
+                button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
+                disabled=False,
+               layout=Layout(width='180px')
+            )
+
             def send_to_fury_cb(b):
                 self.fury_feedback_str.value = "working..."
                 session_dir = os.getenv('SESSIONDIR')
@@ -445,6 +452,11 @@ class SubstrateTab(object):
             self.fury_button.on_click(send_to_fury_cb)
             fury_row = HBox([self.fury_button, self.fury_feedback_str])
 
+            #--------
+            def fury_reset_cb(b):
+                self.fury_tab.reset()
+            self.fury_reset_button.on_click(fury_reset_cb)
+
 #            self.fury_button = Button(description='random_seed', disabled=True, layout=name_button_layout)
 #        param_name1.style.button_color = 'lightgreen'
 
@@ -457,7 +469,7 @@ class SubstrateTab(object):
 
             # box_layout = Layout(border='0px solid')
             controls_box = VBox([row1, row2])  # ,width='50%', layout=box_layout)
-            self.tab = VBox([controls_box, self.i_plot, fury_row, download_row])
+            self.tab = VBox([controls_box, self.i_plot, fury_row, self.fury_reset_button, download_row])
             # self.tab = VBox([controls_box, self.debug_str, self.i_plot, download_row])
         else:
             # self.tab = VBox([row1, row2])
