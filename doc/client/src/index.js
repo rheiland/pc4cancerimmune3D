@@ -1,6 +1,7 @@
 import "./styles.css";
 
 import vtkWSLinkClient from 'vtk.js/Sources/IO/Core/WSLinkClient';
+import vtkURLExtract from 'vtk.js/Sources/Common/Core/URLExtract';
 import vtkRemoteView from 'vtk.js/Sources/Rendering/Misc/RemoteView';
 import { connectImageStream } from 'vtk.js/Sources/Rendering/Misc/RemoteView';
 
@@ -71,13 +72,14 @@ function bindEvent(element, eventName, eventHandler) {
 
 // hint: if you use the launcher.py and ws-proxy just leave out sessionURL
 // (it will be provided by the launcher)
-const config = {
-    // sessionManagerURL: 'http://127.0.0.1:8081/paraview',
-    // sessionManagerURL: 'https://fury.grg.sice.indiana.edu/paraview',
-    sessionManagerURL: 'https://fury-server.hubzero.org/paraview',
+const baseConfig = {
+    // sessionManagerURL: 'localhost:9000/paraview',
+    // sessionManagerURL: 'https://fury-server.hubzero.org/paraview',
+    sessionManagerURL: 'https://fury.grg.sice.indiana.edu/paraview',
     application: 'tumor'
 };
-
+const userParams = vtkURLExtract.extractURLParameters();
+const config = Object.assign({}, baseConfig, userParams);
 
 // Connect
 clientToConnect
@@ -90,16 +92,31 @@ clientToConnect
     view.setViewId(-1);
     view.render();
 
-    session.call('tumor.update_view', [['my_custom_url', 'and a folder'], ]);
-    session.call('tumor.add_frame', ['{"centers":(0,1,1)}']);
+    session.call('tumor.initialize', []);
+    // session.call('tumor.update_view', ['{"folder": "/pvw/apps/tumor/server", "filename": "output00000246.xml"}',]);
 
     // Listen to messages from parent window
     bindEvent(window, 'message', function (e) {
-      session.call('tumor.update_view', [['my_custom_url', 'and a folder'], ]);
-      session.call('tumor.add_frame', ['{"centers":(0,1,1)}']);
-      session.call('tumor.add_frame', [e.data]);
       console.log(e.data);
+      var data = JSON.stringify(e.data);
+      console.log(data);
+      data = JSON.parse(data);
+
+      var eventType = "";
+      if ('function' in data) {
+        eventType = data["function"];
+      }
+
+      switch (eventType) {
+        case 'update_view':
+          session.call('tumor.update_view', [e.data,]);
+          break;
+        case 'reset':
+          session.call('tumor.reset', []);
+          break;
+      }
     });
+
     divRenderer.removeChild(divLoading);
     divRenderer.removeChild(txtLoading);
     divRenderer.classList.remove("parent");
