@@ -32,15 +32,6 @@ class FuryTab(object):
                 height='650' width='50%' align="right">
             </iframe>
             """
-        html = \
-            """
-            <div w3-include-html='doc/fury_client.html' height='650' width='50%'
-                align="left", id="fury_frame">
-            </div>
-            <iframe src='https://fury-server.hubzero.org/tumor/'
-                height='650' width='50%' align="right">
-            </iframe>
-            """
         self.tab.append_display_data(HTML(html))
         js = \
             """
@@ -78,7 +69,7 @@ class FuryTab(object):
         js_call = \
             """
             var my_iframe = document.getElementById('fury_frame');
-            my_iframe.contentWindow.postMessage({0},'*');
+            my_iframe.contentWindow.postMessage('{0}','*');
             """.format(s_data)
         print(js_call)
         display(Javascript(js_call))
