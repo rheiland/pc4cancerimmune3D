@@ -406,7 +406,9 @@ class SubstrateTab(object):
                 print('session_id = ',session_id)
                 user_id = os.getenv('USER')
                 print('user_id = ',user_id)
-                fury_data_path_str = "/data/tools/shared/" + user_id + "/fury/" + session_id
+                # fury_data_path_str = "/data/tools/shared/" + user_id + "/fury/" + session_id
+                # updated, based on email from Serge (1/19/21)
+                fury_data_path_str = "/srv/nanohub/data/tools/shared/" + user_id + "/fury/" + session_id
 
                 # dummy to test locally
                 # fury_data_path_str = "/tmp/" + user_id + "/fury" 
