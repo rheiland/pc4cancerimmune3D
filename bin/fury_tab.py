@@ -32,6 +32,18 @@ class FuryTab(object):
                 height='650' width='50%' align="right" id="nh_frame">
             </iframe>
             """
+        html = \
+            """
+            <iframe src='https://fury-server.hubzero.org/tumor/'
+                height='650' width='50%' id="nh_frame">
+            </iframe>
+            """
+        html = \
+            """
+            <iframe src='doc/fury_client.html' height='650' width='50%'
+                align="left" id="nh_frame">
+            </iframe>
+            """
         self.tab.append_display_data(HTML(html))
         js = \
             """
@@ -66,12 +78,19 @@ class FuryTab(object):
     def __send(self, data):
         """Send information to Server via IFrame."""
         s_data = json.dumps(data)
+        # Send to both server
         js_call = \
             """
             var my_iframe = document.getElementById('fury_frame');
             var nanohub_iframe = document.getElementById('nh_frame');
             my_iframe.contentWindow.postMessage('{0}', '*');
             nanohub_iframe.contentWindow.postMessage('{0}', '*');
+            """.format(s_data)
+        # send to nanohub only
+        js_call = \
+            """
+            var nanohub_iframe = document.getElementById('nh_frame');
+            nanohub_iframe.contentWindow.postMessage({0}, '*');
             """.format(s_data)
         print(js_call)
         display(Javascript(js_call))
