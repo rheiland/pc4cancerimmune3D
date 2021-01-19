@@ -74,8 +74,8 @@ function bindEvent(element, eventName, eventHandler) {
 // (it will be provided by the launcher)
 const baseConfig = {
     // sessionManagerURL: 'localhost:9000/paraview',
-    // sessionManagerURL: 'https://fury-server.hubzero.org/paraview',
-    sessionManagerURL: 'https://fury.grg.sice.indiana.edu/paraview',
+    sessionManagerURL: 'https://fury-server.hubzero.org/paraview',
+    // sessionManagerURL: 'https://fury.grg.sice.indiana.edu/paraview',
     application: 'tumor'
 };
 const userParams = vtkURLExtract.extractURLParameters();
@@ -98,12 +98,15 @@ clientToConnect
     // Listen to messages from parent window
     bindEvent(window, 'message', function (e) {
       console.log(e.data);
+      // console.log(typeof e.data);
       var data = JSON.stringify(e.data);
       console.log(data);
       data = JSON.parse(data);
+      // console.log(data);
+      // console.log(typeof data);
 
       var eventType = "";
-      if ('function' in data) {
+      if ('function' in e.data) {
         eventType = data["function"];
       }
 
