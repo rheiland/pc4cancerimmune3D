@@ -406,13 +406,14 @@ class SubstrateTab(object):
                 print('session_id = ',session_id)
                 user_id = os.getenv('USER')
                 print('user_id = ',user_id)
-                # fury_data_path_str = "/data/tools/shared/" + user_id + "/fury/" + session_id
+                fury_data_path_str = "/data/tools/shared/" + user_id + "/fury/" + session_id
                 # updated, based on email from Serge (1/19/21)
-                fury_data_path_str = "/srv/nanohub/data/tools/shared/" + user_id + "/fury/" + session_id
+                fury_data_path_str2 = "/srv/nanohub/data/tools/shared/" + user_id + "/fury/" + session_id
 
                 # dummy to test locally
                 # fury_data_path_str = "/tmp/" + user_id + "/fury" 
                 print("fury_data_path_str = ",fury_data_path_str)
+                print("fury_data_path_str2 = ",fury_data_path_str2)
 
                 os.makedirs(fury_data_path_str, exist_ok=True)
                 # data_file = "output00000001_cells_physicell.mat"
@@ -447,7 +448,7 @@ class SubstrateTab(object):
                 # copyfile("tmpdir/" + data_file, fury_data_path_str + "/" + "output00000001_cells_physicell.mat")
 
                 # Send signal to Fury that new data is ready: (folder, filename)
-                self.fury_tab.send_data(fury_data_path_str, xml_file)
+                self.fury_tab.send_data(fury_data_path_str2, xml_file)
 
                 self.fury_feedback_str.value = ""
 
