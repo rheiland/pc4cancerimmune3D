@@ -35,15 +35,17 @@ class FuryTab(object):
         html = \
             """
             <iframe src='https://fury-server.hubzero.org/tumor/'
-                height='650' width='50%' id="nh_frame">
+                height='650' width='50%' id="nh_frame"
+                style="-webkit-transform:scale(0.8);-moz-transform-scale(0.8); -moz-transform-origin: top left; -webkit-transform-origin: top left; -o-transform-origin: top left; -ms-transform-origin: top left; transform-origin: top left;">
             </iframe>
             """
-        html = \
-            """
-            <iframe src='doc/fury_client.html' height='650' width='50%'
-                align="left" id="nh_frame">
-            </iframe>
-            """
+        # Integrated client does not work on Chrome.
+        # html = \
+        #     """
+        #     <iframe src='doc/fury_client.html' height='650' width='50%'
+        #         align="left" id="nh_frame">
+        #     </iframe>
+        #     """
         self.tab.append_display_data(HTML(html))
         js = \
             """
@@ -63,7 +65,7 @@ class FuryTab(object):
 
     def reset(self):
         """Send Event to clear the visualization."""
-        data = {'function': 'reset_view',
+        data = {'function': 'reset',
                 'folder': '',
                 'filename': ''}
         self.__send(data)
