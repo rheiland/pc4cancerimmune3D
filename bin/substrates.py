@@ -27,6 +27,7 @@ if platform.system() != 'Windows':
     try:
 #        print("Trying to import hublib.ui")
         from hublib.ui import Download
+        # from hublib.ui import Download,Upload
     except:
         hublib_flag = False
 else:
@@ -385,17 +386,26 @@ class SubstrateTab(object):
             self.fury_button= Button(
                 description="Send current frame's 3D data to Fury", #style={'description_width': 'initial'},
                 button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
-               tooltip='Click to send data to the Fury GPU server',
+                tooltip='Click to send data to the Fury GPU server',
                 disabled=False,
-               layout=Layout(width='280px')
+                layout=Layout(width='280px')
             )
             self.fury_feedback_str = Label(value='')
+
+            self.day13_button= Button(
+                description="Send day 13 data", #style={'description_width': 'initial'},
+                button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
+                tooltip='Click to send day 13 data to Fury',
+                disabled=False,
+                layout=Layout(width='180px')
+            )
+            self.day13_feedback_str = Label(value='')
 
             self.fury_reset_button= Button(
                 description="Reset Fury", #style={'description_width': 'initial'},
                 button_style='success',  # 'success', 'info', 'warning', 'danger' or ''
                 disabled=False,
-               layout=Layout(width='180px')
+                layout=Layout(width='180px')
             )
 
             def send_to_fury_cb(b):
@@ -453,7 +463,70 @@ class SubstrateTab(object):
                 self.fury_feedback_str.value = ""
 
             self.fury_button.on_click(send_to_fury_cb)
+
+            def send_day13_to_fury_cb(b):
+                self.fury_feedback_str.value = "working..."
+                session_dir = os.getenv('SESSIONDIR')
+                print('session_dir = ',session_dir)
+                session_id = os.getenv('SESSION')
+                print('session_id = ',session_id)
+                user_id = os.getenv('USER')
+                print('user_id = ',user_id)
+                fury_data_path_str = "/data/tools/shared/" + user_id + "/fury/" + session_id
+                # updated, based on email from Serge (1/19/21)
+                fury_data_path_str2 = "/srv/nanohub/data/tools/shared/" + user_id + "/fury/" + session_id
+
+                # dummy to test locally
+                # fury_data_path_str = "/tmp/" + user_id + "/fury" 
+                print("fury_data_path_str = ",fury_data_path_str)
+                print("fury_data_path_str2 = ",fury_data_path_str2)
+
+                os.makedirs(fury_data_path_str, exist_ok=True)
+                # data_file = "output00000001_cells_physicell.mat"
+
+                # we need to copy 3(?) files (for any one frame)
+                mesh_file = "initial_mesh0.mat" 
+                xml_file = "output%08d.xml" % 13
+                data_file = "output%08d_cells_physicell.mat" % 13
+                # from the app's root directory
+                # print("self.output_dir = ",self.output_dir)
+                # from_file = "tmpdir/" + data_file
+
+                # from_file = self.output_dir + "/" + mesh_file
+                from_file = "data/" + mesh_file
+                to_file = fury_data_path_str + "/" + mesh_file
+                copyfile(from_file, to_file)
+
+                # from_file = self.output_dir + "/" + xml_file
+                from_file = "data/" + xml_file
+                to_file = fury_data_path_str + "/" + xml_file
+                copyfile(from_file, to_file)
+
+                # from_file = self.output_dir + "/" + data_file
+                from_file = "data/" + data_file
+                print("from: ",from_file)
+                to_file = fury_data_path_str + "/" + data_file
+                print("to: ",to_file)
+                copyfile(from_file, to_file)
+
+#                time.sleep(3)
+                file = Path(to_file)
+                while not file.exists():
+                    time.sleep(2)
+
+                # copyfile("tmpdir/" + data_file, fury_data_path_str + "/" + "output00000001_cells_physicell.mat")
+
+                # Send signal to Fury that new data is ready: (folder, filename)
+                self.fury_tab.send_data(fury_data_path_str2, xml_file)
+
+                self.day13_feedback_str.value = ""
+
+            self.day13_button.on_click(send_day13_to_fury_cb)
+
+
+            # self.fury_button.on_click(send_to_fury_cb)
             fury_row = HBox([self.fury_button, self.fury_feedback_str])
+            day13_row = HBox([self.day13_button, self.day13_feedback_str])
 
             #--------
             def fury_reset_cb(b):
@@ -470,11 +543,17 @@ class SubstrateTab(object):
                                             tooltip='You need to allow pop-ups in your browser', cb=self.download_svg_cb)
             download_row = HBox([self.download_button.w, self.download_svg_button.w, Label("Download all cell plots (browser must allow pop-ups).")])
 
+            # https://hubzero.github.io/hublib/ui.html#file-upload
+            # self.upload_button = Upload('Single frame upload', style='warning', icon='cloud-upload', 
+            #                                     tooltip='Upload zipped data', maxsize='10M', cb=self.upload_cb)
+            # upload_row = HBox([self.upload_button.w, Label("Upload zipped data (single frame)")])
+
             # box_layout = Layout(border='0px solid')
             controls_box = VBox([row1, row2])  # ,width='50%', layout=box_layout)
-            self.tab = VBox([controls_box, self.i_plot, fury_row, self.fury_reset_button, download_row])
+            # self.tab = VBox([controls_box, self.i_plot, fury_row, self.fury_reset_button, download_row, upload_row])
+            self.tab = VBox([controls_box, self.i_plot, fury_row, day13_row, self.fury_reset_button,  download_row])
             # self.tab = VBox([controls_box, self.debug_str, self.i_plot, download_row])
-        else:
+        else:  # no hublib
             # self.tab = VBox([row1, row2])
             self.tab = VBox([row1, row2, self.i_plot])
 
@@ -644,6 +723,18 @@ class SubstrateTab(object):
                 myzip.write(f, os.path.basename(f)) # 2nd arg avoids full filename path in the archive
             for f in glob.glob(file_mat):
                 myzip.write(f, os.path.basename(f))
+
+    def upload_cb(self,w,name):
+        # file_xml = os.path.join(self.output_dir, '*.xml')
+        # file_mat = os.path.join(self.output_dir, '*.mat')
+        # print('zip up all ',file_str)
+        print("%s downloaded" % name)
+        w.reset()
+        # with zipfile.ZipFile('mcds.zip', 'w') as myzip:
+        #     for f in glob.glob(file_xml):
+        #         myzip.write(f, os.path.basename(f)) # 2nd arg avoids full filename path in the archive
+        #     for f in glob.glob(file_mat):
+        #         myzip.write(f, os.path.basename(f))
 
     def update_max_frames(self,_b):
         self.i_plot.children[0].max = self.max_frames.value
