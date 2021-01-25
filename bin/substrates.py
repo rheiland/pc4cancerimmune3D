@@ -465,7 +465,7 @@ class SubstrateTab(object):
             self.fury_button.on_click(send_to_fury_cb)
 
             def send_day13_to_fury_cb(b):
-                self.fury_feedback_str.value = "working..."
+                self.day13_feedback_str.value = "working..."
                 session_dir = os.getenv('SESSIONDIR')
                 print('session_dir = ',session_dir)
                 session_id = os.getenv('SESSION')
