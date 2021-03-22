@@ -6,7 +6,10 @@ import json
 class FuryTab(object):
 
     def __init__(self):
-        self.tab = Output(layout={'height': '650px'})
+        # self.tab = Output(layout={'height': '650px'})
+        # self.tab = Output(layout={'height': '750px'})
+        self.tab = Output(layout={'height': '950px'})
+        # self.tab = Output(layout={'height': '950px', 'width': '950px'})
         #self.tab = Output(layout={'height': 'auto'})
         #self.tab.append_display_data(HTML(filename='doc/fury_client.html'))
         #self.tab.append_display_data(Javascript(
@@ -15,27 +18,27 @@ class FuryTab(object):
             """
             <iframe
                 src='http://fury.grg.sice.indiana.edu/tumor/'
-                height='650' width='50%'>
+                height='950' width='950'>
             </iframe>
             """
         html = \
             """
-            <iframe src='doc/fury_client.html' height='650' width='50%'>
+            <iframe src='doc/fury_client.html' height='950' width='950'>
             </iframe>
             """
         html = \
             """
-            <iframe src='doc/fury_client.html' height='650' width='50%'
+            <iframe src='doc/fury_client.html' height='950' width='950'
                 align="left" id="fury_frame">
             </iframe>
             <iframe src='https://fury-server.hubzero.org/tumor/'
-                height='650' width='50%' align="right" id="nh_frame">
+                height='950' width='950' align="right" id="nh_frame">
             </iframe>
             """
         html = \
             """
             <iframe src='https://fury-server.hubzero.org/tumor/'
-                height='650' width='50%' id="nh_frame"
+                height='950' width='950' id="nh_frame"
                 style="-webkit-transform:scale(0.8);-moz-transform-scale(0.8); -moz-transform-origin: top left; -webkit-transform-origin: top left; -o-transform-origin: top left; -ms-transform-origin: top left; transform-origin: top left;">
             </iframe>
             """
